@@ -70,7 +70,7 @@ Requirements:
 ```powershell
 python -m pip install -r requirements.txt
 python -m PyInstaller --clean --noconfirm L2M.spec
-iscc installer\L2M.iss
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\L2M.iss
 ```
 
 The application is written in `l2m_ui.py`; the conversion engine is `l2m_engine.py`; the UI lives in `ui/`. The installer output is `dist\installer\L2M_Setup.exe`.
