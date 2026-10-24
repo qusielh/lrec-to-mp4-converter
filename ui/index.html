@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L2M</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="edition-free">
+<div id="splash">
+  <div class="spinner"></div>
+  <div id="splash-text" class="muted">&#1580;&#1575;&#1585;&#1613; &#1575;&#1604;&#1578;&#1581;&#1605;&#1610;&#1604;</div>
+  <div id="splash-err" class="splash-err" hidden></div>
+</div>
+<div id="app">
+
+  <header id="titlebar">
+    <div class="drag" id="dragbar">
+      <div class="brand"><span class="logo">L2M</span></div>
+      <div class="titles">
+        <div class="h1">LREC&nbsp;&nbsp;&rarr;&nbsp;&nbsp;MP4</div>
+        <div class="sub" id="subtitle"></div>
+      </div>
+    </div>
+    <div class="tb-actions">
+      <button id="btn-lang" class="tb"></button>
+      <button id="btn-help" class="tb" data-i18n="help"></button>
+      <button id="btn-min" class="tb" title="Minimize">&#8211;</button>
+      <button id="btn-close" class="tb close" title="Close">&#10005;</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="toolbar">
+      <span class="h3" data-i18n="recordings"></span>
+      <span class="hint" data-i18n="rechor"></span>
+      <span class="spacer"></span>
+      <button id="btn-clear" class="btn ghost" data-i18n="clear"></button>
+      <button id="btn-add" class="btn primary"></button>
+    </div>
+
+    <div id="list" class="list"></div>
+
+    <div class="actions">
+      <button id="btn-convert" class="btn convert" data-i18n="convert"></button>
+      <button id="btn-stop" class="btn danger" data-i18n="stop" disabled></button>
+      <button id="btn-open" class="btn ghost" data-i18n="openfolder"></button>
+      <span class="spacer"></span>
+      <span id="status" class="status"></span>
+    </div>
+
+    <div class="progress"><div id="bar"></div></div>
+    <div class="meta"><span id="filetitle"></span><span id="pct"></span></div>
+
+    <div class="loghead">
+      <span data-i18n="activity"></span>
+      <span class="line"></span>
+    </div>
+    <pre id="log"></pre>
+  </main>
+</div>
+
+<div class="overlay" id="m-help" hidden>
+  <div class="modal">
+    <h2 data-i18n="help.title"></h2>
+    <p class="muted" data-i18n="help.intro"></p>
+    <p class="muted" data-i18n="help.free"></p>
+    <p class="muted" data-i18n="help.note"></p>
+    <button id="open-site" class="site">
+      <span data-i18n="help.supportLink"></span>
+      <span class="ext">&#8599;</span>
+    </button>
+    <p class="muted about" id="about-line" dir="ltr"></p>
+    <div class="modal-actions wrap">
+      <button class="btn ok" data-close data-i18n="help.close"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app_common.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

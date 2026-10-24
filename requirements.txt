@@ -1,0 +1,4 @@
+pywebview>=5.0
+numpy>=2.0
+Pillow>=11.0
+pyinstaller>=6.0
