@@ -39,7 +39,7 @@ There is one known limitation: some gaps of 400 ms or more sit inside a single c
 
 L2M is free for SVU students and for personal, noncommercial use. There is no trial timer, no device activation, no account, and no feature lock. If the app saves you time, you can support its development or star the repository. That is optional.
 
-Institutions that need deployment help, custom work, or a support agreement can use the contact link on the [L2M website](https://l2m-platform.qusielh.workers.dev).
+Institutions that need deployment help, custom work, or a support agreement can open an issue on the [project page](https://github.com/qusielh/lrec-to-mp4-converter).
 
 ## Install
 
@@ -104,6 +104,6 @@ PLAN.md            deferred audio experiment
 
 ## License
 
-L2M is source-available under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, study, modify, and share it for noncommercial purposes. Commercial redistribution, resale, or bundling into a paid product requires a separate license. Institutional deployment and support are available separately through the website.
+L2M is source-available under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, study, modify, and share it for noncommercial purposes. Commercial redistribution, resale, or bundling into a paid product requires a separate license. Institutional deployment and support can be arranged separately through the project page.
 
 The bundled ffmpeg and TrueSpeech decoder remain under their own licenses; see the files in `bin/` and their upstream projects for details.
