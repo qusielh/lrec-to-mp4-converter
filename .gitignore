@@ -20,7 +20,6 @@ bin/*.dll
 capture/
 tmp/
 
-tools/bulk_test.py
-tools/run_bg_convert.py
+tools/
 
 AGENTS.md

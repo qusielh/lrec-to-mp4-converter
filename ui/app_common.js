@@ -75,7 +75,7 @@ mergeI18n({
 const state = {
   lang: "ar",
   files: [],
-  website: "https://l2m-platform.qusielh.workers.dev",
+  website: "https://github.com/qusielh/lrec-to-mp4-converter",
   busy: false,
   booted: false
 };

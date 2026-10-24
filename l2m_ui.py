@@ -22,7 +22,7 @@ import webview
 
 import l2m_engine as engine
 
-DEFAULT_WEBSITE = "https://l2m-platform.qusielh.workers.dev"
+DEFAULT_WEBSITE = "https://github.com/qusielh/lrec-to-mp4-converter"
 
 FROZEN = getattr(sys, "frozen", False)
 BASE = Path(sys._MEIPASS) if FROZEN else Path(__file__).resolve().parent
