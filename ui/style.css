@@ -54,28 +54,6 @@ html, body {
 
 html[lang="ar"] body { font-family: var(--font-ar); }
 
-/* ------------------------------------------------ trial edition */
-body.edition-trial {
-  --accent: #06b6d4;
-  --accent-hi: #22d3ee;
-  --magic: #a78bfa;
-}
-
-.trial-badge {
-  display: inline-block;
-  padding: 3px 9px;
-  border-radius: 999px;
-  font-family: var(--font-brand);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .16em;
-  color: #052b33;
-  background: linear-gradient(160deg, #67e8f9, #22d3ee);
-  box-shadow: 0 2px 12px rgba(34, 211, 238, .40);
-  user-select: none;
-}
-.trial-badge[hidden] { display: none; }
-
 .note {
   margin: 12px 0 0;
   padding: 9px 12px;

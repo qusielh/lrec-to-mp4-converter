@@ -24,7 +24,7 @@ VSVersionInfo(
            StringStruct('FileVersion', '1.1.0.0'),
            StringStruct('InternalName', 'L2M'),
            StringStruct('LegalCopyright', 'Copyright © 2026 Qusie'),
-           StringStruct('Comments', 'https://l2m-platform.qusielh.workers.dev'),
+           StringStruct('Comments', 'https://github.com/qusielh/lrec-to-mp4-converter'),
            StringStruct('OriginalFilename', 'L2M.exe'),
            StringStruct('ProductName', 'L2M'),
            StringStruct('ProductVersion', '1.1.0.0')])

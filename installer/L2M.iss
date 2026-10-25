@@ -2,10 +2,10 @@
 ; L2M (free edition) - Inno Setup script
 ;
 ; Builds L2M_Setup.exe, a single installer that ships the self-contained
-; one-file L2M.exe. No Python and no extra runtime are required on the
-; user's PC: everything (engine, UI, ffmpeg, tsdecode) is already inside the
-; exe. The only optional prerequisite is the WebView2 runtime, which this
-; installer adds automatically if it is missing.
+; one-file L2M.exe. No Python is required on the user's PC: everything
+; (engine, UI, ffmpeg, tsdecode) is already inside the exe. The only optional
+; prerequisite is WebView2; the installer offers Microsoft's download page if
+; it is missing.
 ;
 ; Compile with:  iscc installer\L2M.iss
 ; Output:        dist\installer\L2M_Setup.exe
@@ -24,9 +24,9 @@ AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 AppPublisher={#AppPublisher}
-AppPublisherURL=https://l2m-platform.qusielh.workers.dev
-AppSupportURL=https://l2m-platform.qusielh.workers.dev
-AppUpdatesURL=https://l2m-platform.qusielh.workers.dev
+AppPublisherURL=https://github.com/qusielh/lrec-to-mp4-converter
+AppSupportURL=https://github.com/qusielh/lrec-to-mp4-converter/issues
+AppUpdatesURL=https://github.com/qusielh/lrec-to-mp4-converter/releases
 AppCopyright=Copyright (C) 2026 Qusie
 AppComments=L2M - Linktivity recording (.lrec) to MP4 converter
 VersionInfoVersion=1.1.0.0

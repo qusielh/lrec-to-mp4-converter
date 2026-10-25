@@ -2,9 +2,10 @@
 
 **L2M converts Linktivity `.lrec` lecture recordings into normal MP4 files.**
 
-It is a small Windows app built for SVU students who want to keep, review, and
-share recorded lectures without depending on the original Linktivity player.
-The app is free, works offline, and has no account, activation, or usage limit.
+It is a small Windows app built for students at the Syrian Virtual University
+(SVU) who want to keep, review, and share recorded lectures without depending on
+the original Linktivity player. The app is free for students and personal use,
+works offline, and has no account, activation, or usage limit.
 
 ![L2M screenshot](assets/screenshot.png)
 
@@ -42,11 +43,6 @@ timeline. Short waits are joined so normal speech stays continuous; longer
 pauses are preserved. Video frames are rebuilt from the archive rather than
 captured from the player window.
 
-Future work will focus on making the result cleaner without changing the words:
-clearer voice, fewer unnatural pauses in the middle of a sentence, and smoother
-video where screen updates are missing. Those changes need listening and visual
-tests, and they must stay fast enough to run on a normal student laptop.
-
 ## Free for students
 
 L2M is free for SVU students and for personal, noncommercial use. There is no
@@ -54,17 +50,19 @@ trial timer, no device activation, no account, and no feature lock. If the app
 saves you time, you can star the repository, report a bug, or share it with a
 classmate. That is optional.
 
-Institutions that need deployment help, custom work, or a support agreement can
-open an issue on the [project page](https://github.com/qusielh/lrec-to-mp4-converter).
+Institutions can open an issue on the
+[project page](https://github.com/qusielh/lrec-to-mp4-converter) for deployment
+questions.
 
 ## Install
 
 1. Download the latest `L2M_Setup.exe` from the Releases page of this repository.
-2. Run the installer. Windows may ask for permission to install the Microsoft
-   WebView2 Runtime if it is not already present.
+2. Run the installer. If WebView2 is missing, the installer offers to open
+   Microsoft's download page.
 3. Open **L2M** from the Start menu or desktop shortcut.
 
-The app does not require Python or any other runtime after installation.
+The app does not require Python. WebView2 is included with most Windows 10/11
+systems; if it is missing, the installer offers a download link.
 
 ## Use
 
@@ -114,14 +112,6 @@ installer/         Inno Setup script
 assets/            icon and screenshot
 bin/               ffmpeg and TrueSpeech decoder (not committed)
 ```
-
-## Roadmap
-
-- Improve voice clarity and reduce unnatural mid-sentence gaps while preserving
-  real pauses and keeping the processing light enough for ordinary laptops.
-- Explore frame interpolation to smooth video where the original recording has
-  missing screen updates, with quality and performance measured before release.
-- Keep the free student build free and add more real recordings to the test set.
 
 ## License
 
