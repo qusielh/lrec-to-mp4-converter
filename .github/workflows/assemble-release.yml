@@ -1,0 +1,58 @@
+name: Assemble release installer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download parts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          gh api "repos/$REPO/releases/422693550/assets" --paginate \
+            --jq '.[] | select(.name | startswith("L2M_Setup.exe.part")) | [.id, .name] | @tsv' > parts.tsv
+          cat parts.tsv
+          while IFS=$'\t' read -r id name; do
+            gh api -H "Accept: application/octet-stream" "repos/$REPO/releases/assets/$id" > "assets/$name"
+          done < parts.tsv
+          ls -l assets
+
+      - name: Combine and verify
+        run: |
+          set -euo pipefail
+          cat assets/L2M_Setup.exe.part1 assets/L2M_Setup.exe.part2 assets/L2M_Setup.exe.part3 assets/L2M_Setup.exe.part4 > L2M_Setup.exe
+          echo "899A72CD45C49E59994721AFB95B5DC93DC928D2DBCFF973390F1AAD0CCD49DF  L2M_Setup.exe" | sha256sum -c -
+          ls -l L2M_Setup.exe
+
+      - name: Upload installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "User-Agent: opencode" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/octet-stream" \
+            --upload-file L2M_Setup.exe \
+            "https://uploads.github.com/repos/$REPO/releases/422693550/assets?name=L2M_Setup.exe" | tee upload.json
+          cat upload.json
+
+      - name: Delete parts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          while IFS=$'\t' read -r id name; do
+            gh api --method DELETE "repos/$REPO/releases/assets/$id"
+          done < parts.tsv
