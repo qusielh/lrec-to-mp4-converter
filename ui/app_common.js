@@ -76,6 +76,7 @@ const state = {
   lang: "ar",
   files: [],
   website: "https://github.com/qusielh/lrec-to-mp4-converter",
+  supportUrl: "https://l2m-platform.qusielh.workers.dev",
   busy: false,
   booted: false
 };
@@ -133,6 +134,8 @@ function applyLang() {
   if (bl) bl.textContent = state.lang === "ar" ? "English" : "العربية";
   var ba = $("btn-add");
   if (ba) ba.textContent = t("add");
+  var bs = $("btn-support");
+  if (bs) bs.title = t("support.title");
   updateDynamic();
   renderFiles();
 }
@@ -230,6 +233,7 @@ function closeModal(id) {
 }
 function closeAll() {
   closeModal("m-help");
+  closeModal("m-support");
 }
 
 /* ---------- actions ---------- */
@@ -274,6 +278,31 @@ function onConvert() {
 function onStop() { apiCall("cancel"); }
 function onOpenFolder() { apiCall("open_folder"); }
 function onOpenSite() { apiCall("open_website"); }
+function onOpenSupport() {
+  updateDynamic();
+  openModal("m-support");
+}
+function onOpenSupportSite() { apiCall("open_support"); }
+function onOpenGitHub() { apiCall("open_github"); }
+function copySupportText(text, toastKey) {
+  apiCall("copy_text", text).then(function (ok) {
+    if (ok !== false) showToast(t(toastKey || "support.copied"), "ok");
+  });
+}
+function onShare() {
+  var text = t("support.shareText") + " " + state.supportUrl;
+  if (navigator.share) {
+    try {
+      navigator.share({
+        title: "L2M",
+        text: t("support.shareText"),
+        url: state.supportUrl
+      }).catch(function () { copySupportText(text, "support.shareCopied"); });
+      return;
+    } catch (e) {}
+  }
+  copySupportText(text, "support.shareCopied");
+}
 function onMin() { apiCall("minimize"); }
 function onClose() { apiCall("close"); }
 function onLang() {
@@ -353,6 +382,7 @@ function startApp(info) {
     state.lang = info.lang || "ar";
     state.files = Array.isArray(info.files) ? info.files : [];
     state.website = info.website || state.website;
+    state.supportUrl = info.support_url || state.supportUrl;
   }
   applyLang();
   renderFiles();
@@ -400,6 +430,10 @@ function bind() {
 
   $("btn-lang").addEventListener("click", onLang);
   $("btn-help").addEventListener("click", function () { updateDynamic(); openModal("m-help"); });
+  $("btn-support").addEventListener("click", onOpenSupport);
+  $("btn-support-site").addEventListener("click", onOpenSupportSite);
+  $("btn-star").addEventListener("click", onOpenGitHub);
+  $("btn-share").addEventListener("click", onShare);
   $("btn-min").addEventListener("click", onMin);
   $("btn-close").addEventListener("click", onClose);
 
@@ -411,6 +445,11 @@ function bind() {
 
   document.querySelectorAll("[data-close]").forEach(function (b) {
     b.addEventListener("click", function () { closeAll(); });
+  });
+  document.querySelectorAll("[data-copy]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      copySupportText(b.getAttribute("data-copy"), "support.copied");
+    });
   });
   document.querySelectorAll(".overlay").forEach(function (o) {
     o.addEventListener("mousedown", function (e) { if (e.target === o) closeAll(); });

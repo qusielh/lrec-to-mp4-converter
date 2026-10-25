@@ -47,8 +47,8 @@ captured from the player window.
 
 L2M is free for SVU students and for personal, noncommercial use. There is no
 trial timer, no device activation, no account, and no feature lock. If the app
-saves you time, you can star the repository, report a bug, or share it with a
-classmate. That is optional.
+saves you time, you can star the repository, report a bug, share it with a
+classmate, or use the optional Support button in the app. That is optional.
 
 Institutions can open an issue on the
 [project page](https://github.com/qusielh/lrec-to-mp4-converter) for deployment

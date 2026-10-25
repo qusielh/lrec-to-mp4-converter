@@ -25,6 +25,10 @@
     <div class="tb-actions">
       <button id="btn-lang" class="tb"></button>
       <button id="btn-help" class="tb" data-i18n="help"></button>
+      <button id="btn-support" class="tb support" title="Support L2M">
+        <span class="heart" aria-hidden="true">&#9829;</span>
+        <span data-i18n="support"></span>
+      </button>
       <button id="btn-min" class="tb" title="Minimize">&#8211;</button>
       <button id="btn-close" class="tb close" title="Close">&#10005;</button>
     </div>
@@ -73,6 +77,48 @@
     <p class="muted about" id="about-line" dir="ltr"></p>
     <div class="modal-actions wrap">
       <button class="btn ok" data-close data-i18n="help.close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-support" hidden>
+  <div class="modal support-modal">
+    <div class="support-hero">
+      <div class="support-heart" aria-hidden="true">&#9829;</div>
+      <div>
+        <h2 data-i18n="support.title"></h2>
+        <p class="muted" data-i18n="support.intro"></p>
+      </div>
+    </div>
+
+    <div class="support-panel">
+      <p class="support-label" data-i18n="support.methods"></p>
+      <div class="method">
+        <div class="method-info">
+          <span class="method-name" data-i18n="support.sham"></span>
+          <code dir="ltr">d59cfde33c0969d14de42f0c3a41a834</code>
+        </div>
+        <button class="copy-btn" type="button" data-copy="d59cfde33c0969d14de42f0c3a41a834" data-i18n="support.copy"></button>
+      </div>
+      <div class="method">
+        <div class="method-info">
+          <span class="method-name" data-i18n="support.solana"></span>
+          <code dir="ltr">BKTagssh2HE1sx69tckDazmZ2bZKjfHjJUPBXwpShMk9</code>
+        </div>
+        <button class="copy-btn" type="button" data-copy="BKTagssh2HE1sx69tckDazmZ2bZKjfHjJUPBXwpShMk9" data-i18n="support.copy"></button>
+      </div>
+    </div>
+
+    <p class="muted support-note" data-i18n="support.note"></p>
+
+    <div class="support-actions">
+      <button id="btn-support-site" class="btn primary" data-i18n="support.open"></button>
+      <button id="btn-star" class="btn ghost" data-i18n="support.star"></button>
+      <button id="btn-share" class="btn ghost" data-i18n="support.share"></button>
+    </div>
+
+    <div class="modal-actions wrap">
+      <button class="btn ghost" data-close data-i18n="support.later"></button>
     </div>
   </div>
 </div>
