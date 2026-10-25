@@ -22,7 +22,6 @@ mergeI18n({
     rechor: "name \u2192 saved as .mp4",
     add: "+  Add files",
     clear: "Clear",
-    help: "Help",
     convert: "Convert to MP4",
     stop: "Stop",
     openfolder: "Open folder",
@@ -39,16 +38,13 @@ mergeI18n({
     "toast.nofiles": "Add at least one .lrec file first",
     "toast.stopped": "Stopped",
     "toast.failed": "{ok} converted, {fail} failed \u2014 see log",
-    "toast.done": "{ok} file(s) converted",
-    "help.title": "Help",
-    "help.close": "Close"
+    "toast.done": "{ok} file(s) converted"
   },
   ar: {
     "recordings": "التسجيلات",
     "rechor": "اسم الملف → يُحفظ بصيغة .mp4",
     "add": "+  إضافة ملفات",
     "clear": "مسح",
-    "help": "مساعدة",
     "convert": "تحويل إلى MP4",
     "stop": "إيقاف",
     "openfolder": "فتح المجلد",
@@ -65,9 +61,7 @@ mergeI18n({
     "toast.nofiles": "أضف ملف .lrec واحدًا على الأقل",
     "toast.stopped": "تم الإيقاف",
     "toast.failed": "نجح {ok} وفشل {fail} — راجع السجل",
-    "toast.done": "تم تحويل {ok} من الملفات",
-    "help.title": "المساعدة",
-    "help.close": "إغلاق"
+    "toast.done": "تم تحويل {ok} من الملفات"
   }
 });
 
@@ -76,7 +70,6 @@ const state = {
   lang: "ar",
   files: [],
   website: "https://github.com/qusielh/lrec-to-mp4-converter",
-  supportUrl: "https://l2m-platform.qusielh.workers.dev",
   busy: false,
   booted: false
 };
@@ -191,6 +184,10 @@ function renderFiles() {
     row.appendChild(rm);
     list.appendChild(row);
   });
+  if (state.busy) {
+    document.querySelectorAll(".row input").forEach(function (i) { i.disabled = true; });
+    document.querySelectorAll(".row .rm").forEach(function (b) { b.disabled = true; });
+  }
 }
 
 function markFile(index, cls) {
@@ -232,12 +229,12 @@ function closeModal(id) {
   if (el) el.hidden = true;
 }
 function closeAll() {
-  closeModal("m-help");
   closeModal("m-support");
 }
 
 /* ---------- actions ---------- */
 function onRename(i, input) {
+  if (state.busy) return;
   var val = input.value;
   apiCall("rename_file", i, val).then(function (clean) {
     if (typeof clean === "string") {
@@ -247,16 +244,19 @@ function onRename(i, input) {
   });
 }
 function onRemove(i) {
+  if (state.busy) return;
   apiCall("remove_file", i).then(function (files) {
     if (Array.isArray(files)) { state.files = files; renderFiles(); }
   });
 }
 function onAdd() {
+  if (state.busy) return;
   apiCall("add_files").then(function (files) {
     if (Array.isArray(files)) { state.files = files; renderFiles(); }
   });
 }
 function onClear() {
+  if (state.busy) return;
   apiCall("clear_files").then(function () {
     state.files = [];
     renderFiles();
@@ -264,6 +264,7 @@ function onClear() {
   });
 }
 function onConvert() {
+  if (state.busy) return;
   if (!state.files.length) {
     showToast(t("toast.nofiles"), "bad");
     return;
@@ -277,32 +278,12 @@ function onConvert() {
 }
 function onStop() { apiCall("cancel"); }
 function onOpenFolder() { apiCall("open_folder"); }
-function onOpenSite() { apiCall("open_website"); }
 function onOpenSupport() {
   updateDynamic();
   openModal("m-support");
 }
 function onOpenSupportSite() { apiCall("open_support"); }
 function onOpenGitHub() { apiCall("open_github"); }
-function copySupportText(text, toastKey) {
-  apiCall("copy_text", text).then(function (ok) {
-    if (ok !== false) showToast(t(toastKey || "support.copied"), "ok");
-  });
-}
-function onShare() {
-  var text = t("support.shareText") + " " + state.supportUrl;
-  if (navigator.share) {
-    try {
-      navigator.share({
-        title: "L2M",
-        text: t("support.shareText"),
-        url: state.supportUrl
-      }).catch(function () { copySupportText(text, "support.shareCopied"); });
-      return;
-    } catch (e) {}
-  }
-  copySupportText(text, "support.shareCopied");
-}
 function onMin() { apiCall("minimize"); }
 function onClose() { apiCall("close"); }
 function onLang() {
@@ -382,7 +363,6 @@ function startApp(info) {
     state.lang = info.lang || "ar";
     state.files = Array.isArray(info.files) ? info.files : [];
     state.website = info.website || state.website;
-    state.supportUrl = info.support_url || state.supportUrl;
   }
   applyLang();
   renderFiles();
@@ -428,12 +408,11 @@ function bind() {
     document.body.classList.remove("dragging");
   });
 
+  $("btn-github").addEventListener("click", onOpenGitHub);
   $("btn-lang").addEventListener("click", onLang);
-  $("btn-help").addEventListener("click", function () { updateDynamic(); openModal("m-help"); });
   $("btn-support").addEventListener("click", onOpenSupport);
   $("btn-support-site").addEventListener("click", onOpenSupportSite);
   $("btn-star").addEventListener("click", onOpenGitHub);
-  $("btn-share").addEventListener("click", onShare);
   $("btn-min").addEventListener("click", onMin);
   $("btn-close").addEventListener("click", onClose);
 
@@ -446,11 +425,6 @@ function bind() {
   document.querySelectorAll("[data-close]").forEach(function (b) {
     b.addEventListener("click", function () { closeAll(); });
   });
-  document.querySelectorAll("[data-copy]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      copySupportText(b.getAttribute("data-copy"), "support.copied");
-    });
-  });
   document.querySelectorAll(".overlay").forEach(function (o) {
     o.addEventListener("mousedown", function (e) { if (e.target === o) closeAll(); });
   });
@@ -461,8 +435,6 @@ function bind() {
 window.addEventListener("DOMContentLoaded", function () {
   bind();
   applyLang();
-  var about = $("about-line");
-  if (about) about.textContent = "L2M " + APP_VERSION + " · © 2026 Qusie";
   renderFiles();
   boot();
 });

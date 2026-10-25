@@ -237,6 +237,8 @@ class Api:
         return [f["name"] for f in self.files]
 
     def add_files(self):
+        if self.busy:
+            return self._names()
         directory = self.add_dir if self.add_dir and os.path.isdir(self.add_dir) else ""
         try:
             picked = self._window.create_file_dialog(
@@ -264,6 +266,8 @@ class Api:
         return [f["name"] for f in self.files]
 
     def remove_file(self, index):
+        if self.busy:
+            return self._names()
         try:
             index = int(index)
         except (TypeError, ValueError):
@@ -273,10 +277,20 @@ class Api:
         return [f["name"] for f in self.files]
 
     def clear_files(self):
+        if self.busy:
+            return self._names()
         self.files = []
         return []
 
     def rename_file(self, index, name):
+        if self.busy:
+            try:
+                index = int(index)
+            except (TypeError, ValueError):
+                return name
+            if 0 <= index < len(self.files):
+                return self.files[index]["name"]
+            return name
         try:
             index = int(index)
         except (TypeError, ValueError):
