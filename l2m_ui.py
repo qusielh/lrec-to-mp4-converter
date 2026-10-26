@@ -3,7 +3,7 @@
 A thin, frameless pywebview shell around ``l2m_engine``. All of the Arabic /
 bidi text rendering is handled by the WebView2 (Chromium) engine, so mixed
 Arabic/Latin/number strings lay out correctly. The app is fully offline; the
-only network call is the optional support link opened from Help or Support.
+only network call is the optional support link opened from the Support button.
 """
 
 from __future__ import annotations
@@ -23,7 +23,6 @@ import webview
 import l2m_engine as engine
 
 GITHUB_URL = "https://github.com/qusielh/lrec-to-mp4-converter"
-DEFAULT_WEBSITE = GITHUB_URL
 DEFAULT_SUPPORT = "https://l2m-platform.qusielh.workers.dev"
 
 FROZEN = getattr(sys, "frozen", False)
@@ -188,7 +187,6 @@ class Api:
         self.lang = cfg.get("lang") or "ar"
         self.add_dir = cfg.get("add_dir") or ""
         self.convert_dir = cfg.get("convert_dir") or ""
-        self.website_url = cfg.get("website_url") or DEFAULT_WEBSITE
         self.support_url = cfg.get("support_url") or DEFAULT_SUPPORT
         self.files: list[dict] = []
         self.busy = False
@@ -223,8 +221,6 @@ class Api:
         return {
             "lang": self.lang,
             "files": [f["name"] for f in self.files],
-            "website": self.website_url,
-            "support_url": self.support_url,
         }
 
     def set_lang(self, lang: str):
@@ -403,13 +399,6 @@ class Api:
                 webbrowser.open("file:///" + target.replace("\\", "/"))
             except Exception:
                 pass
-        return True
-
-    def open_website(self):
-        try:
-            webbrowser.open(self.website_url)
-        except Exception:
-            pass
         return True
 
     def open_support(self):

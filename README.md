@@ -83,7 +83,7 @@ Requirements:
 - Windows 10 or later
 - Python 3.13
 - [Inno Setup](https://jrsoftware.org/isinfo.php) for the installer
-- `ffmpeg.exe` and `tsdecode.exe` in `bin/`
+- `ffmpeg.exe` and `tsdecode.exe` in `bin/` (not committed; add them before building)
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -121,5 +121,8 @@ share it for noncommercial purposes. Commercial redistribution, resale, or
 bundling into a paid product requires a separate license. Institutional
 deployment and support can be arranged separately through the project page.
 
-The bundled ffmpeg and TrueSpeech decoder remain under their own licenses; see
-the files in `bin/` and their upstream projects for details.
+The bundled ffmpeg and TrueSpeech decoder remain under their own licenses. See
+the files you place in `bin/` and their upstream projects for details.
+
+The Cairo font files in `ui/fonts/` are licensed under the SIL Open Font
+License 1.1.

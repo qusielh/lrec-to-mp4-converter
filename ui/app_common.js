@@ -3,8 +3,6 @@
    controls, log, events and the boot handshake. */
 "use strict";
 
-const APP_VERSION = "1.1.0";
-
 /* ---------- i18n ---------- */
 /* Common strings. Edition files merge their own keys into I18N. */
 const I18N = { en: {}, ar: {} };
@@ -69,9 +67,7 @@ mergeI18n({
 const state = {
   lang: "ar",
   files: [],
-  website: "https://github.com/qusielh/lrec-to-mp4-converter",
-  busy: false,
-  booted: false
+  busy: false
 };
 
 /* Edition hook for the small amount of edition-specific UI wiring. */
@@ -83,16 +79,6 @@ const EDITION = {
 };
 
 const $ = function (id) { return document.getElementById(id); };
-
-function api(name) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  try {
-    if (!window.pywebview || !window.pywebview.api) return Promise.resolve(null);
-    return window.pywebview.api[name].apply(window.pywebview.api, args);
-  } catch (e) {
-    return Promise.resolve(null);
-  }
-}
 
 function t(key, params) {
   var dict = I18N[state.lang] || I18N.en;
@@ -362,7 +348,6 @@ function startApp(info) {
   if (info && typeof info === "object") {
     state.lang = info.lang || "ar";
     state.files = Array.isArray(info.files) ? info.files : [];
-    state.website = info.website || state.website;
   }
   applyLang();
   renderFiles();
