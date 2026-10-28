@@ -7,8 +7,6 @@ It is a small Windows app built for students at the Syrian Virtual University
 the original Linktivity player. The app is free for students and personal use,
 works offline, and has no account, activation, or usage limit.
 
-![L2M screenshot](assets/screenshot.png)
-
 ## Why L2M
 
 SVU recordings often arrive as `.lrec` files. They play inside an old
