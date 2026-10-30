@@ -23,7 +23,7 @@ mergeI18n({
     convert: "Convert to MP4",
     stop: "Stop",
     openfolder: "Open folder",
-    outputfolder: "Output folder",
+    outputfolder: "Change output folder",
     activity: "Activity",
     empty: "No recordings yet. Click \u201c+ Add files\u201d to begin.",
     "st.starting": "Starting",
@@ -48,7 +48,7 @@ mergeI18n({
     "convert": "تحويل إلى MP4",
     "stop": "إيقاف",
     "openfolder": "فتح المجلد",
-    "outputfolder": "مجلد الإخراج",
+    "outputfolder": "تغيير مجلد الإخراج",
     "activity": "النشاط",
     "empty": "لا توجد تسجيلات بعد. اضغط «إضافة ملفات» للبدء.",
     "st.starting": "جارٍ البدء",
@@ -94,6 +94,14 @@ function t(key, params) {
   return s;
 }
 
+function updateOutputButton() {
+  var bo = $("btn-output");
+  if (!bo) return;
+  var label = t("outputfolder");
+  bo.setAttribute("aria-label", label);
+  bo.title = state.outDir || label;
+}
+
 /* ---------- api bridge ---------- */
 async function apiCall(name) {
   var args = Array.prototype.slice.call(arguments, 1);
@@ -120,8 +128,7 @@ function applyLang() {
   if (ba) ba.textContent = t("add");
   var bs = $("btn-support");
   if (bs) bs.title = t("support.title");
-  var bo = $("btn-output");
-  if (bo) bo.title = state.outDir || "";
+  updateOutputButton();
   updateDynamic();
   renderFiles();
 }
@@ -280,8 +287,7 @@ function onChooseOutput() {
   apiCall("choose_output_dir").then(function (path) {
     if (typeof path === "string" && path) {
       state.outDir = path;
-      var bo = $("btn-output");
-      if (bo) bo.title = path;
+      updateOutputButton();
       showToast(t("toast.output"), "ok");
     }
   });
@@ -342,8 +348,7 @@ function handleEvent(ev) {
     case "filetitle": $("filetitle").textContent = ev.text || ""; break;
     case "outdir": {
       state.outDir = ev.path || "";
-      var bo = $("btn-output");
-      if (bo) bo.title = state.outDir;
+      updateOutputButton();
       break;
     }
     case "fstate": {

@@ -705,6 +705,18 @@ html[lang="ar"] .modal-actions { flex-direction: row-reverse; }
   border-radius: 9px;
 }
 
+.btn.icon {
+  width: 38px;
+  min-width: 38px;
+  padding: 0;
+  flex: none;
+}
+
+.btn.icon svg {
+  width: 19px;
+  height: 19px;
+}
+
 .tb {
   border-radius: 10px;
   background: rgba(255, 255, 255, .045);

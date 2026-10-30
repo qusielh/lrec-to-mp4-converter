@@ -5,8 +5,8 @@
 #
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 2, 0, 0),
-    prodvers=(1, 2, 0, 0),
+    filevers=(1, 2, 1, 0),
+    prodvers=(1, 2, 1, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -21,13 +21,13 @@ VSVersionInfo(
           '040904B0',
           [StringStruct('CompanyName', 'Qusie'),
            StringStruct('FileDescription', 'L2M - Linktivity Recording to MP4'),
-           StringStruct('FileVersion', '1.2.0.0'),
+           StringStruct('FileVersion', '1.2.1.0'),
            StringStruct('InternalName', 'L2M'),
            StringStruct('LegalCopyright', 'Copyright © 2026 Qusie'),
            StringStruct('Comments', 'https://github.com/qusielh/lrec-to-mp4-converter'),
            StringStruct('OriginalFilename', 'L2M.exe'),
            StringStruct('ProductName', 'L2M'),
-           StringStruct('ProductVersion', '1.2.0.0')])
+           StringStruct('ProductVersion', '1.2.1.0')])
       ]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]

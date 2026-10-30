@@ -12,7 +12,7 @@
 ; ---------------------------------------------------------------------------
 
 #define AppName        "L2M"
-#define AppVersion     "1.2.0"
+#define AppVersion     "1.2.1"
 #define AppPublisher   "Qusie"
 #define AppExeName     "L2M.exe"
 #define SourceExe      "..\dist\L2M.exe"
@@ -29,12 +29,12 @@ AppSupportURL=https://github.com/qusielh/lrec-to-mp4-converter/issues
 AppUpdatesURL=https://github.com/qusielh/lrec-to-mp4-converter/releases
 AppCopyright=Copyright (C) 2026 Qusie
 AppComments=L2M - Linktivity recording (.lrec) to MP4 converter
-VersionInfoVersion=1.2.0.0
+VersionInfoVersion=1.2.1.0
 VersionInfoCompany=Qusie
 VersionInfoDescription=L2M Setup
 VersionInfoCopyright=Copyright (C) 2026 Qusie
 VersionInfoProductName=L2M
-VersionInfoProductVersion=1.2.0.0
+VersionInfoProductVersion=1.2.1.0
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
