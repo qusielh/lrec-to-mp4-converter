@@ -23,6 +23,7 @@ mergeI18n({
     convert: "Convert to MP4",
     stop: "Stop",
     openfolder: "Open folder",
+    outputfolder: "Output folder",
     activity: "Activity",
     empty: "No recordings yet. Click \u201c+ Add files\u201d to begin.",
     "st.starting": "Starting",
@@ -36,7 +37,8 @@ mergeI18n({
     "toast.nofiles": "Add at least one .lrec file first",
     "toast.stopped": "Stopped",
     "toast.failed": "{ok} converted, {fail} failed \u2014 see log",
-    "toast.done": "{ok} file(s) converted"
+    "toast.done": "{ok} file(s) converted",
+    "toast.output": "Output folder changed"
   },
   ar: {
     "recordings": "التسجيلات",
@@ -46,6 +48,7 @@ mergeI18n({
     "convert": "تحويل إلى MP4",
     "stop": "إيقاف",
     "openfolder": "فتح المجلد",
+    "outputfolder": "مجلد الإخراج",
     "activity": "النشاط",
     "empty": "لا توجد تسجيلات بعد. اضغط «إضافة ملفات» للبدء.",
     "st.starting": "جارٍ البدء",
@@ -59,7 +62,8 @@ mergeI18n({
     "toast.nofiles": "أضف ملف .lrec واحدًا على الأقل",
     "toast.stopped": "تم الإيقاف",
     "toast.failed": "نجح {ok} وفشل {fail} — راجع السجل",
-    "toast.done": "تم تحويل {ok} من الملفات"
+    "toast.done": "تم تحويل {ok} من الملفات",
+    "toast.output": "تم تغيير مجلد الإخراج"
   }
 });
 
@@ -67,7 +71,8 @@ mergeI18n({
 const state = {
   lang: "ar",
   files: [],
-  busy: false
+  busy: false,
+  outDir: ""
 };
 
 /* Edition hook for the small amount of edition-specific UI wiring. */
@@ -115,6 +120,8 @@ function applyLang() {
   if (ba) ba.textContent = t("add");
   var bs = $("btn-support");
   if (bs) bs.title = t("support.title");
+  var bo = $("btn-output");
+  if (bo) bo.title = state.outDir || "";
   updateDynamic();
   renderFiles();
 }
@@ -180,7 +187,10 @@ function markFile(index, cls) {
   var row = document.querySelector('.row[data-index="' + index + '"]');
   if (!row) return;
   var dot = row.querySelector('[data-role="dot"]');
-  if (dot) dot.className = "dot" + (cls ? " " + cls : "");
+  if (!dot) return;
+  dot.className = "dot";
+  void dot.offsetWidth;
+  if (cls) dot.classList.add(cls);
 }
 
 function clearMarks() {
@@ -255,6 +265,7 @@ function onConvert() {
     showToast(t("toast.nofiles"), "bad");
     return;
   }
+  clearMarks();
   apiCall("start").then(function (res) {
     if (res && res.ok === false) {
       var reason = res.reason || "toast.nofiles";
@@ -264,12 +275,34 @@ function onConvert() {
 }
 function onStop() { apiCall("cancel"); }
 function onOpenFolder() { apiCall("open_folder"); }
+function onChooseOutput() {
+  if (state.busy) return;
+  apiCall("choose_output_dir").then(function (path) {
+    if (typeof path === "string" && path) {
+      state.outDir = path;
+      var bo = $("btn-output");
+      if (bo) bo.title = path;
+      showToast(t("toast.output"), "ok");
+    }
+  });
+}
 function onOpenSupport() {
+  var modal = $("m-support");
+  if (modal && !modal.hidden) {
+    closeModal("m-support");
+    return;
+  }
   updateDynamic();
   openModal("m-support");
 }
-function onOpenSupportSite() { apiCall("open_support"); }
-function onOpenGitHub() { apiCall("open_github"); }
+function onOpenSupportSite() {
+  apiCall("open_support");
+  closeModal("m-support");
+}
+function onOpenGitHub() {
+  apiCall("open_github");
+  closeModal("m-support");
+}
 function onMin() { apiCall("minimize"); }
 function onClose() { apiCall("close"); }
 function onLang() {
@@ -288,6 +321,7 @@ function setBusy(on) {
   $("btn-stop").disabled = !state.busy;
   $("btn-add").disabled = state.busy;
   $("btn-clear").disabled = state.busy;
+  $("btn-output").disabled = state.busy;
   document.querySelectorAll(".row input").forEach(function (i) { i.disabled = state.busy; });
   document.querySelectorAll(".row .rm").forEach(function (b) { b.disabled = state.busy; });
 }
@@ -306,6 +340,12 @@ function handleEvent(ev) {
       break;
     }
     case "filetitle": $("filetitle").textContent = ev.text || ""; break;
+    case "outdir": {
+      state.outDir = ev.path || "";
+      var bo = $("btn-output");
+      if (bo) bo.title = state.outDir;
+      break;
+    }
     case "fstate": {
       var cls = ev.state === "active" ? "active" : (ev.state === "done" ? "done" : (ev.state === "fail" ? "fail" : ""));
       markFile(ev.index, cls);
@@ -348,6 +388,7 @@ function startApp(info) {
   if (info && typeof info === "object") {
     state.lang = info.lang || "ar";
     state.files = Array.isArray(info.files) ? info.files : [];
+    state.outDir = typeof info.out_dir === "string" ? info.out_dir : "";
   }
   applyLang();
   renderFiles();
@@ -406,6 +447,7 @@ function bind() {
   $("btn-convert").addEventListener("click", onConvert);
   $("btn-stop").addEventListener("click", onStop);
   $("btn-open").addEventListener("click", onOpenFolder);
+  $("btn-output").addEventListener("click", onChooseOutput);
 
   document.querySelectorAll("[data-close]").forEach(function (b) {
     b.addEventListener("click", function () { closeAll(); });

@@ -221,6 +221,7 @@ class Api:
         return {
             "lang": self.lang,
             "files": [f["name"] for f in self.files],
+            "out_dir": self._out_dir(),
         }
 
     def set_lang(self, lang: str):
@@ -335,6 +336,7 @@ class Api:
         ok = 0
         fail = 0
         self._emit({"type": "clear-log"})
+        self._emit({"type": "outdir", "path": out_dir})
         self._emit({"type": "busy", "on": True})
         self._emit({"type": "status", "key": "st.starting"})
         for i, job in enumerate(jobs):
@@ -390,6 +392,29 @@ class Api:
             self._persist(convert_dir=out_dir)
 
     # ---- misc actions
+    def choose_output_dir(self):
+        if self.busy:
+            return ""
+        start = (
+            self.convert_dir
+            if self.convert_dir and os.path.isdir(self.convert_dir)
+            else self._out_dir()
+        )
+        dialog = getattr(webview, "FileDialog", None)
+        dialog_type = dialog.FOLDER if dialog else webview.FOLDER_DIALOG
+        try:
+            picked = self._window.create_file_dialog(
+                dialog_type, directory=start)
+        except Exception:
+            return ""
+        if isinstance(picked, (list, tuple)):
+            picked = picked[0] if picked else ""
+        if not picked or not os.path.isdir(picked):
+            return ""
+        self.convert_dir = picked
+        self._persist(convert_dir=picked)
+        return picked
+
     def open_folder(self):
         target = self._out_dir()
         try:

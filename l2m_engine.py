@@ -18,7 +18,6 @@ import zlib
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
 
 FROZEN = getattr(sys, "frozen", False)
 BASE = Path(sys._MEIPASS) if FROZEN else Path(__file__).resolve().parent
@@ -97,6 +96,65 @@ def parse_lrec(path):
         recs.append((ts, ctl, payload))
         pos += 24 + buflen
     return recs
+
+
+def _read_cstrings(buf, off, count):
+    out = []
+    start = off
+    i = off
+    while i < len(buf) and len(out) < count:
+        if buf[i] == 0:
+            out.append(buf[start:i].decode("utf-8", "replace"))
+            start = i + 1
+        i += 1
+    while len(out) < count:
+        out.append("")
+    return out
+
+
+def _hms(ms):
+    ms = max(int(ms), 0)
+    h, rem = divmod(ms, 3600000)
+    m, rem = divmod(rem, 60000)
+    s, ms = divmod(rem, 1000)
+    return "%02d:%02d:%02d.%03d" % (h, m, s, ms)
+
+
+def chat_entries(recs):
+    entries = []
+    for ts, ctl, pl in recs:
+        if ctl != CHAT or len(pl) < 2:
+            continue
+        count = pl[0] | (pl[1] << 8)
+        fields = _read_cstrings(pl, 2, count)
+        if len(fields) >= 4:
+            entries.append((ts, fields[0], fields[1], fields[2], fields[3]))
+    return entries
+
+
+def write_chat_txt(recs, out_path, t0):
+    entries = chat_entries(recs)
+    path = os.path.splitext(out_path)[0] + ".txt"
+    lines = ["Chat log", "========", ""]
+    if entries:
+        lines.append("Messages: %d" % len(entries))
+        lines.append("Timestamps are relative to the video start.")
+        lines.append("")
+        for ts, sent, user, peer, text in entries:
+            lines.append("[+%s] %s" % (_hms(ts - t0), user))
+            lines.append("  sent: %s" % sent)
+            if peer:
+                lines.append("  peer: %s" % peer)
+            text_lines = str(text).splitlines() or [""]
+            lines.append("  text: %s" % text_lines[0])
+            for extra in text_lines[1:]:
+                lines.append("        %s" % extra)
+            lines.append("")
+    else:
+        lines.append("No chat messages in this recording.")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines))
+    return path
 
 
 # ---------------------------------------------------------------- audio
@@ -220,6 +278,24 @@ def _rgb_masked(buf, W, H, rm, gm, bm, dt):
     return np.dstack([r, g, b]).reshape(H, W, 3)
 
 
+def write_png(path, rgb, compress_level=1):
+    rgb = np.ascontiguousarray(rgb, dtype=np.uint8)
+    h, w = rgb.shape[:2]
+    raw = np.empty((h, 1 + w * 3), dtype=np.uint8)
+    raw[:, 0] = 0
+    raw[:, 1:] = rgb.reshape(h, w * 3)
+
+    def chunk(tag, data):
+        return (struct.pack(">I", len(data)) + tag + data +
+                struct.pack(">I", zlib.crc32(tag + data) & 0xffffffff))
+
+    ihdr = struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)
+    with open(path, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n")
+        f.write(chunk(b"IHDR", ihdr))
+        f.write(chunk(b"IDAT", zlib.compress(raw.tobytes(), compress_level)))
+        f.write(chunk(b"IEND", b""))
+
 
 def render_frames(recs, outdir, should_cancel, on_progress):
     frames_dir = os.path.join(outdir, "frames")
@@ -292,8 +368,7 @@ def render_frames(recs, outdir, should_cancel, on_progress):
                 else:
                     rgb = arr.reshape(H, W, 4)[:, :3][:, :, ::-1]
                 name = "f%06d.png" % len(entries)
-                Image.fromarray(rgb).save(os.path.join(frames_dir, name),
-                                          compress_level=1)
+                write_png(os.path.join(frames_dir, name), rgb)
                 entries.append((ts, name))
         if done % 25 == 0:
             on_progress(done / float(max(n_vp, 1)))
@@ -453,6 +528,11 @@ def convert_one(lrec, out_path, log, should_cancel, on_progress):
                     pass
             os.replace(part, out_path)
             _CURRENT_PART = None
+            try:
+                chat_path = write_chat_txt(recs, out_path, meta["t0"])
+                log("Chat log: %s" % os.path.basename(chat_path))
+            except Exception as exc:
+                log("Chat log failed: %s" % exc)
             emit(0.0, final=True)
             log("Done: %s (%.1f MB)" %
                 (os.path.basename(out_path), os.path.getsize(out_path) / 1048576))

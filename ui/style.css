@@ -310,6 +310,13 @@ main { flex: 1; display: flex; flex-direction: column; padding: 16px 22px 18px; 
   border-radius: 8px;
 }
 .row .rm:hover { background: var(--danger); color: #fff; }
+.row input:disabled { opacity: .65; cursor: default; }
+.row .rm:disabled {
+  opacity: .3;
+  cursor: default;
+  pointer-events: none;
+}
+.row .rm:disabled:hover { background: transparent; color: var(--muted2); }
 
 .actions { display: flex; align-items: center; gap: 10px; margin: 15px 0 10px; }
 .status { color: var(--muted); font-size: 12px; font-weight: 700; }
@@ -782,17 +789,15 @@ html[lang="ar"] .modal-actions { flex-direction: row-reverse; }
 
 .support-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
   margin-top: 20px;
 }
 
 .support-actions .btn {
-  flex: 1 1 170px;
-}
-
-.support-actions .btn.primary {
-  flex-basis: 230px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 10px;
 }
 
 html[lang="ar"] .support-hero,

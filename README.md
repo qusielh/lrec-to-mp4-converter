@@ -69,7 +69,9 @@ systems; if it is missing, the installer offers a download link.
    automatically.
 3. Click **Convert to MP4**.
 4. The finished files are written next to the source recordings, or in the last
-   output folder you used. Use **Open folder** to find them.
+   output folder you used. Use **Output folder** to choose a different
+   destination and **Open folder** to find the results. A matching `.txt` chat
+   log is saved next to each MP4 using the same name.
 
 The log at the bottom shows what the engine is doing and reports any file that
 could not be converted.
